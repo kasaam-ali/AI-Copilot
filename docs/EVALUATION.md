@@ -16,13 +16,19 @@ is never used for training or model selection.
 
 | Dataset | Split sizes (train/val/test) | Test AUROC | Test accuracy |
 |---|---|---|---|
+| **MVTec AD `bottle` (active)** | 175 / 59 / 58 | **1.000** | 0.847 |
 | Synthetic (pipeline validation) | 216 / 72 / 72 | 0.998 | 0.90 |
-| MVTec AD `bottle` | pending (train on Colab) | pending | pending |
 
-> The synthetic dataset is a procedural good-vs-defect generator used only to validate
-> the end-to-end pipeline while the real MVTec AD weights are trained on Colab. The
-> MVTec-trained `image/v1` weights replace the synthetic ones with zero code change; this
-> table is updated with the real numbers once available.
+> **Active model:** the MVTec AD `bottle` weights, trained on GPU (Colab) and loaded via
+> `scripts/register_weights.py`. Test AUROC is 1.000 on a small test set (58 images);
+> `bottle` is a visually clear category, so perfect ranking is expected and is reported
+> with the test size for honesty. The 0.847 accuracy is at the default 0.5 threshold — a
+> calibration artifact, not a generalization gap (AUROC 1.0 means a threshold exists that
+> separates the classes perfectly). MC-Dropout uncertainty plus the human-in-the-loop
+> review handle borderline cases.
+>
+> The synthetic generator remains for offline pipeline validation; swapping datasets needs
+> no code change.
 
 ## Tabular model (defect probability)
 
