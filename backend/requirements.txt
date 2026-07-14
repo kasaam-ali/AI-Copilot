@@ -9,9 +9,13 @@ httpx>=0.27
 # Database
 sqlmodel>=0.0.22
 
-# Machine learning core (used from Phase 1 onward; CPU wheels)
-torch>=2.4
-torchvision>=0.19
+# Machine learning core (used from Phase 1 onward).
+# Install torch/torchvision from the CPU wheel index:
+#   pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cpu
+# These are a known-stable cp313 pair; newer bleeding-edge builds had a
+# torchvision::nms operator ABI mismatch on Windows.
+torch==2.8.0
+torchvision==0.23.0
 numpy>=1.26
 pandas>=2.2
 scikit-learn>=1.5

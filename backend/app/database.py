@@ -27,7 +27,9 @@ def _configure_sqlite(dbapi_connection, connection_record) -> None:  # noqa: ANN
 
 
 def init_db() -> None:
-    """Create all tables. Import model modules before calling so metadata is populated."""
+    """Create all tables. Importing the models module registers them on the metadata."""
+    from app.models_db import models  # noqa: F401  (import registers tables)
+
     SQLModel.metadata.create_all(engine)
 
 

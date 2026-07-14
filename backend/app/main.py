@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from app.api import health
+from app.api import explain, health, inspect
 from app.config import get_settings
 from app.database import init_db
 
@@ -46,3 +46,5 @@ async def add_request_id(request: Request, call_next):
 
 
 app.include_router(health.router, prefix="/api/v1")
+app.include_router(inspect.router, prefix="/api/v1")
+app.include_router(explain.router, prefix="/api/v1")

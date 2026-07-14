@@ -7,7 +7,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Inspect', to: '/inspect', ready: false },
+  { label: 'Inspect', to: '/inspect', ready: true },
   { label: 'Live Inspection', to: '/live', ready: false },
   { label: 'Review Queue', to: '/review', ready: false },
   { label: 'Analytics', to: '/analytics', ready: false },

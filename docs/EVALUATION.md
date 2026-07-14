@@ -1,0 +1,25 @@
+# Evaluation Protocol
+
+All quoted metrics come from this document. The protocol is frozen before training:
+fixed seed (42), stratified train/val/test split persisted by index, and the test split
+is never used for training or model selection.
+
+## Image model (defect classification)
+
+- **Architecture:** ResNet18 (ImageNet weights), backbone frozen except `layer4` + a
+  dropout(0.5) + linear head. Two classes: good (0), defect (1).
+- **Selection:** best validation AUROC with early stopping (patience 5).
+- **Metric:** AUROC on the held-out test split (threshold-independent), plus accuracy.
+- **Uncertainty:** MC-Dropout (N=20) at inference time.
+
+### v1 results
+
+| Dataset | Split sizes (train/val/test) | Test AUROC | Test accuracy |
+|---|---|---|---|
+| Synthetic (pipeline validation) | 216 / 72 / 72 | 0.998 | 0.90 |
+| MVTec AD `bottle` | pending (train on Colab) | pending | pending |
+
+> The synthetic dataset is a procedural good-vs-defect generator used only to validate
+> the end-to-end pipeline while the real MVTec AD weights are trained on Colab. The
+> MVTec-trained `image/v1` weights replace the synthetic ones with zero code change; this
+> table is updated with the real numbers once available.

@@ -34,3 +34,7 @@ frontend/.vite/
 Thumbs.db
 .vscode/
 .idea/
+
+# Personal working notes (not part of the repo)
+PLAN.md
+RULES.md
