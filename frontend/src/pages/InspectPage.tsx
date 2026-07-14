@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { inspectImage } from '../api/client'
 import { Card } from '../components/primitives'
+import { TabularForm } from '../components/features/TabularForm'
 
 export function InspectPage() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ export function InspectPage() {
 
   const mutation = useMutation({
     mutationFn: inspectImage,
-    onSuccess: (result) => navigate('/results', { state: { result } }),
+    onSuccess: (result) => navigate('/results', { state: { image: result } }),
   })
 
   function handleFile(file: File) {
@@ -75,6 +76,15 @@ export function InspectPage() {
             Inspection failed. Is a model trained and the backend running?
           </p>
         )}
+      </Card>
+
+      <h3 className="mb-1 mt-8 text-base font-semibold">Process parameters</h3>
+      <p className="mb-4 text-sm text-ink-muted">
+        Enter production-line sensor readings to predict defect probability with SHAP
+        feature attributions.
+      </p>
+      <Card className="p-6">
+        <TabularForm />
       </Card>
     </div>
   )

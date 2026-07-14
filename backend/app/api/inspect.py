@@ -6,8 +6,14 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlmodel import Session
 
 from app.database import get_session
-from app.schemas.inspect import ImageInspectionResult
+from app.schemas.inspect import (
+    ImageInspectionResult,
+    TabularInspectionRequest,
+    TabularInspectionResult,
+    TabularSchema,
+)
 from app.services.image_inference import run_image_inspection
+from app.services.tabular_inference import get_tabular_schema, run_tabular_inspection
 
 router = APIRouter(prefix="/inspect", tags=["inspection"])
 
@@ -39,5 +45,24 @@ async def inspect_image(
         )
     try:
         return run_image_inspection(session, data, file.filename)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
+
+
+@router.get("/tabular/schema", response_model=TabularSchema)
+def tabular_schema() -> TabularSchema:
+    try:
+        return get_tabular_schema()
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
+
+
+@router.post("/tabular", response_model=TabularInspectionResult)
+def inspect_tabular(
+    payload: TabularInspectionRequest,
+    session: Session = Depends(get_session),
+) -> TabularInspectionResult:
+    try:
+        return run_tabular_inspection(session, payload.features)
     except RuntimeError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))

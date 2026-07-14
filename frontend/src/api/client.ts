@@ -35,3 +35,42 @@ export async function inspectImage(file: File): Promise<ImageInspectionResult> {
   const { data } = await apiClient.post<ImageInspectionResult>('/inspect/image', form)
   return data
 }
+
+export interface ShapContribution {
+  feature: string
+  value: number
+  contribution: number
+}
+
+export interface TabularInspectionResult {
+  inspection_id: number
+  prediction_id: number
+  label: string
+  defect_probability: number
+  confidence: number
+  uncertainty: number
+  base_value: number
+  shap: ShapContribution[]
+  model_version: string
+  weights_sha256: string
+  inference_ms: number
+}
+
+export interface TabularSchema {
+  features: string[]
+  defaults: Record<string, number>
+}
+
+export async function getTabularSchema(): Promise<TabularSchema> {
+  const { data } = await apiClient.get<TabularSchema>('/inspect/tabular/schema')
+  return data
+}
+
+export async function inspectTabular(
+  features: Record<string, number>,
+): Promise<TabularInspectionResult> {
+  const { data } = await apiClient.post<TabularInspectionResult>('/inspect/tabular', {
+    features,
+  })
+  return data
+}

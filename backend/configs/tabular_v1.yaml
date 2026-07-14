@@ -1,0 +1,19 @@
+model_type: tabular
+version: v1
+dataset: synthetic
+
+seed: 42
+dropout: 0.3
+hidden: [256, 128, 64]
+
+batch_size: 128
+epochs: 40
+lr: 0.001
+weight_decay: 0.0001
+early_stopping_patience: 8
+
+focal_gamma: 2.0
+focal_alpha: 0.25
+
+shap_background: 50
+shap_nsamples: 100

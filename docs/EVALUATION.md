@@ -23,3 +23,23 @@ is never used for training or model selection.
 > the end-to-end pipeline while the real MVTec AD weights are trained on Colab. The
 > MVTec-trained `image/v1` weights replace the synthetic ones with zero code change; this
 > table is updated with the real numbers once available.
+
+## Tabular model (defect probability)
+
+- **Architecture:** MLP 256-128-64 with BatchNorm + ReLU + Dropout(0.3), single logit.
+- **Loss:** binary focal loss (gamma 2.0, alpha 0.25) for class imbalance.
+- **Metrics:** test AUROC, accuracy, and recall at 90% precision.
+- **Uncertainty:** MC-Dropout (N=20). **Explanation:** SHAP KernelExplainer over the
+  named features.
+
+### v1 results
+
+| Dataset | Split (train/val/test) | Test AUROC | Accuracy | Recall @ P0.90 |
+|---|---|---|---|---|
+| Synthetic production telemetry | 2800 / 600 / 600 | 0.851 | 0.777 | 0.198 |
+| SECOM (UCI) | optional (`scripts/prepare_secom.py`) | pending | pending | pending |
+
+> The synthetic telemetry uses named, interpretable features (machine temperature,
+> vibration, tool wear, material purity, ...) generated from a transparent rule, so the
+> SHAP drivers are honest and readable. It is disclosed as simulated production data.
+> SECOM (real, anonymized 590 features) can be swapped in via `prepare_secom.py`.
