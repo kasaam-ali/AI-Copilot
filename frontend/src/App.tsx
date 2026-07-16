@@ -4,6 +4,7 @@ import { LandingPage } from './pages/LandingPage'
 import { InspectPage } from './pages/InspectPage'
 import { LiveInspectPage } from './pages/LiveInspectPage'
 import { LiveMachinesPage } from './pages/LiveMachinesPage'
+import { HealthScorePage } from './pages/HealthScorePage'
 import { ResultsPage } from './pages/ResultsPage'
 import { ReviewQueuePage } from './pages/ReviewQueuePage'
 import { InspectionDetailPage } from './pages/InspectionDetailPage'
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/inspect" element={<InspectPage />} />
         <Route path="/live" element={<LiveInspectPage />} />
         <Route path="/machines" element={<LiveMachinesPage />} />
+        <Route path="/health-score" element={<HealthScorePage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/review" element={<ReviewQueuePage />} />
         <Route path="/review/:id" element={<InspectionDetailPage />} />

@@ -10,9 +10,9 @@ const navItems: NavItem[] = [
   { label: 'Inspect', to: '/inspect', ready: true },
   { label: 'Live Inspection', to: '/live', ready: true },
   { label: 'Live Machines', to: '/machines', ready: true },
+  { label: 'Health Score', to: '/health-score', ready: true },
   { label: 'Review Queue', to: '/review', ready: true },
   { label: 'Models', to: '/models', ready: true },
-  { label: 'Analytics', to: '/analytics', ready: false },
   { label: 'Reports', to: '/reports', ready: true },
   { label: 'System', to: '/system', ready: true },
 ]
