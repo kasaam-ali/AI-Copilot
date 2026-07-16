@@ -9,16 +9,31 @@ import time
 from sqlmodel import Session
 
 from app.models_db.models import Inspection, InspectionStatus, ModelType, Prediction
-from app.schemas.inspect import ShapContribution, TabularInspectionResult, TabularSchema
+from app.schemas.inspect import (
+    ShapContribution,
+    TabularBatchResult,
+    TabularInspectionResult,
+    TabularRowResult,
+    TabularSchema,
+)
 from app.services.fusion import ModalitySignal
 from ml.tabular.explain import compute_shap
-from ml.tabular.infer import load_active_bundle, predict_tabular
+from ml.tabular.infer import load_active_bundle, predict_tabular, predict_tabular_batch
 
 
 def get_tabular_schema() -> TabularSchema:
     """Return the feature list and default values for building the input form."""
     bundle = load_active_bundle()
     return TabularSchema(features=bundle.features, defaults=bundle.defaults)
+
+
+def run_tabular_batch(rows: list[dict]) -> TabularBatchResult:
+    """Score many machines in one batched pass (for the live stream). Not persisted."""
+    results, bundle = predict_tabular_batch(rows)
+    return TabularBatchResult(
+        results=[TabularRowResult(**r) for r in results],
+        model_version=bundle.version,
+    )
 
 
 def infer_and_persist_tabular(

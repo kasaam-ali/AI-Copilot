@@ -80,6 +80,36 @@ def _mc_probs(model: torch.nn.Module, x: torch.Tensor, passes: int) -> torch.Ten
     return torch.stack([torch.sigmoid(model(x)) for _ in range(passes)], dim=0)
 
 
+def predict_tabular_batch(rows: list[dict], mc_passes: int = 20):
+    """Predict on many feature dicts in one batched forward pass. No persistence."""
+    bundle = load_active_bundle()
+    raws = [build_feature_vector(row, bundle) for row in rows]
+    x_scaled = bundle.scaler.transform(np.array(raws, dtype=np.float64))
+    x_tensor = torch.tensor(x_scaled, dtype=torch.float32)
+
+    _enable_mc_dropout(bundle.model)
+    probs = _mc_probs(bundle.model, x_tensor, mc_passes)  # (passes, N)
+    bundle.model.eval()
+
+    means = probs.mean(dim=0).numpy()
+    stds = probs.std(dim=0).numpy()
+
+    results = []
+    for mean, std in zip(means, stds):
+        mean_f = float(mean)
+        label = "defect" if mean_f >= 0.5 else "ok"
+        confidence = mean_f if label == "defect" else 1.0 - mean_f
+        results.append(
+            {
+                "label": label,
+                "defect_probability": mean_f,
+                "confidence": float(confidence),
+                "uncertainty": float(std),
+            }
+        )
+    return results, bundle
+
+
 def predict_tabular(features: dict, mc_passes: int = 20):
     """Predict on a feature dict. Returns prediction, scaled input, raw vector and bundle."""
     bundle = load_active_bundle()

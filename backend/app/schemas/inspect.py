@@ -49,6 +49,22 @@ class TabularSchema(BaseModel):
     defaults: dict[str, float]
 
 
+class TabularBatchRequest(BaseModel):
+    rows: list[dict[str, float]]
+
+
+class TabularRowResult(BaseModel):
+    label: str
+    defect_probability: float
+    confidence: float
+    uncertainty: float
+
+
+class TabularBatchResult(BaseModel):
+    results: list[TabularRowResult]
+    model_version: str
+
+
 class Detection(BaseModel):
     label: str
     confidence: float

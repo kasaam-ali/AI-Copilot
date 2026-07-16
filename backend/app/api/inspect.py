@@ -12,6 +12,8 @@ from app.schemas.inspect import (
     DetectionResult,
     ImageInspectionResult,
     SessionInspectionResult,
+    TabularBatchRequest,
+    TabularBatchResult,
     TabularInspectionRequest,
     TabularInspectionResult,
     TabularSchema,
@@ -27,7 +29,11 @@ from app.services.detection_service import (
 )
 from app.services.image_inference import run_image_inspection
 from app.services.session_inference import run_session
-from app.services.tabular_inference import get_tabular_schema, run_tabular_inspection
+from app.services.tabular_inference import (
+    get_tabular_schema,
+    run_tabular_batch,
+    run_tabular_inspection,
+)
 from app.services.timeseries_inference import run_timeseries_inspection
 
 router = APIRouter(prefix="/inspect", tags=["inspection"])
@@ -137,6 +143,19 @@ def inspect_tabular(
 ) -> TabularInspectionResult:
     try:
         return run_tabular_inspection(session, payload.features)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
+
+
+@router.post("/tabular/batch", response_model=TabularBatchResult)
+def inspect_tabular_batch(
+    payload: TabularBatchRequest,
+) -> TabularBatchResult:
+    """Score many machines at once for the live stream (stateless)."""
+    if not payload.rows:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="No rows.")
+    try:
+        return run_tabular_batch(payload.rows)
     except RuntimeError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
 

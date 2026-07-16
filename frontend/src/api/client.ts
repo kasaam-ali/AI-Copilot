@@ -121,6 +121,25 @@ export interface TabularSchema {
   defaults: Record<string, number>
 }
 
+export interface TabularRowResult {
+  label: string
+  defect_probability: number
+  confidence: number
+  uncertainty: number
+}
+
+export interface TabularBatchResult {
+  results: TabularRowResult[]
+  model_version: string
+}
+
+export async function scoreMachines(
+  rows: Record<string, number>[],
+): Promise<TabularBatchResult> {
+  const { data } = await apiClient.post<TabularBatchResult>('/inspect/tabular/batch', { rows })
+  return data
+}
+
 export async function getTabularSchema(): Promise<TabularSchema> {
   const { data } = await apiClient.get<TabularSchema>('/inspect/tabular/schema')
   return data

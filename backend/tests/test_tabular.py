@@ -40,3 +40,18 @@ def test_tabular_schema_inspect_and_shap() -> None:
         shap_response = client.get(f"/api/v1/explain/shap/{body['prediction_id']}")
         assert shap_response.status_code == 200
         assert "shap" in shap_response.json()
+
+
+def test_tabular_batch_scores_many() -> None:
+    with TestClient(app) as client:
+        defaults = client.get("/api/v1/inspect/tabular/schema").json()["defaults"]
+        response = client.post(
+            "/api/v1/inspect/tabular/batch",
+            json={"rows": [defaults, defaults, defaults]},
+        )
+        assert response.status_code == 200
+        body = response.json()
+        assert len(body["results"]) == 3
+        for row in body["results"]:
+            assert "label" in row and "defect_probability" in row
+            assert 0.0 <= row["defect_probability"] <= 1.0

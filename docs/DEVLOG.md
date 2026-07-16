@@ -2,6 +2,16 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 7R.4 — Live machines auto-stream (no manual entry)
+
+- `POST /inspect/tabular/batch`: score many machines in one batched MC-Dropout pass
+  (`predict_tabular_batch`), stateless — for the live dashboard, not persisted.
+- Frontend `LiveMachines` page: simulates 16 machines that auto-generate sensor readings on
+  an interval and are scored in real time; a grid of machine cards with defect-risk bars +
+  status pills, an alerts panel, and fleet KPIs (avg health, at-risk, defect alerts). A few
+  machines drift toward failure over time so the board changes live. Replaces the manual
+  single-row form as the tabular headline; enabled the "Live Machines" nav.
+
 ## Phase 7R.3 — Live camera defect detection
 
 - `POST /inspect/frame`: stateless single-frame detection (nothing persisted) so the browser
