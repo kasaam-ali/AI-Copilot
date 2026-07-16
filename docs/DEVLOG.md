@@ -2,6 +2,23 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 7R.1 — Visual defect detection (labeled bounding boxes)
+
+- Benchmarked against commercial inspection copilots (Akridata, Google Visual Inspection AI,
+  Siemens Inspekto): the product needed real localized detection (labeled boxes + confidence),
+  not just a Grad-CAM heatmap. Added a YOLOv8 detection path.
+- `ml/detection/` (infer + annotate): `load_active_detector()` loads the active `detection`
+  weights from the registry and falls back to pretrained `yolov8n.pt` so the pipeline works
+  before the domain model is trained; `detect()` returns labeled boxes; `annotate()` draws
+  per-class colored boxes + labels onto the image.
+- `detection_service.py` + `POST /inspect/detect` (image) + `GET /explain/detection/{id}`
+  (annotated PNG). New `detection` ModelType; results persist like any other inspection.
+- Frontend `DetectionPanel`: drag-drop a photo → annotated image with boxes + a per-class
+  count/legend + detection list. Made the primary vision path on Inspect; the CNN + Grad-CAM
+  is kept as a secondary anomaly heatmap.
+- NEU-DET (steel surface defects, 6 classes) will be trained on Colab and registered as the
+  active detector to replace the generic labels with defect classes.
+
 ## Phase 6 — Active-Learning Flywheel
 
 - New `retrain_job` table and `active_learning.py`: inspector corrections (from

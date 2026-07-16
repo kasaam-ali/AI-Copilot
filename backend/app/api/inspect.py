@@ -9,6 +9,7 @@ from sqlmodel import Session
 
 from app.database import get_session
 from app.schemas.inspect import (
+    DetectionResult,
     ImageInspectionResult,
     SessionInspectionResult,
     TabularInspectionRequest,
@@ -17,6 +18,7 @@ from app.schemas.inspect import (
     TimeSeriesInspectionRequest,
     TimeSeriesInspectionResult,
 )
+from app.services.detection_service import run_detection_inspection
 from app.services.image_inference import run_image_inspection
 from app.services.session_inference import run_session
 from app.services.tabular_inference import get_tabular_schema, run_tabular_inspection
@@ -54,6 +56,26 @@ async def inspect_image(
         return run_image_inspection(session, data, file.filename)
     except RuntimeError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc))
+
+
+@router.post("/detect", response_model=DetectionResult)
+async def inspect_detect(
+    file: UploadFile = File(...),
+    session: Session = Depends(get_session),
+) -> DetectionResult:
+    """Detect defects and return labeled bounding boxes on the image."""
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported file type: {file.content_type}",
+        )
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="File too large (max 20 MB).",
+        )
+    return run_detection_inspection(session, data, file.filename)
 
 
 @router.get("/tabular/schema", response_model=TabularSchema)

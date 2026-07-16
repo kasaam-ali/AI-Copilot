@@ -49,6 +49,24 @@ class TabularSchema(BaseModel):
     defaults: dict[str, float]
 
 
+class Detection(BaseModel):
+    label: str
+    confidence: float
+    box: list[float]  # [x1, y1, x2, y2] in pixels
+
+
+class DetectionResult(BaseModel):
+    inspection_id: int
+    prediction_id: int
+    detections: list[Detection]
+    counts: dict[str, int]
+    n_defects: int
+    annotated_url: str
+    model_version: str
+    is_fallback: bool
+    inference_ms: int
+
+
 class TimeSeriesInspectionRequest(BaseModel):
     series: list[list[float]]
 

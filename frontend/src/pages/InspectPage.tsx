@@ -6,6 +6,7 @@ import { Card } from '../components/primitives'
 import { TabularForm } from '../components/features/TabularForm'
 import { SessionPanel } from '../components/features/SessionPanel'
 import { DocSummaryCard } from '../components/features/DocSummaryCard'
+import { DetectionPanel } from '../components/features/DetectionPanel'
 
 export function InspectPage() {
   const navigate = useNavigate()
@@ -26,7 +27,16 @@ export function InspectPage() {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
+      <h2 className="mb-1 text-lg font-semibold">Defect detection</h2>
+      <p className="mb-4 text-sm text-ink-muted">
+        Upload a product photo — the detector localizes each defect with a labeled bounding
+        box and a confidence score.
+      </p>
+      <Card className="mb-10 p-6">
+        <DetectionPanel />
+      </Card>
+
       <h2 className="mb-1 text-lg font-semibold">Full multimodal inspection</h2>
       <p className="mb-4 text-sm text-ink-muted">
         Fuse vision, process data and machine health into a single Health Score with a
@@ -36,9 +46,10 @@ export function InspectPage() {
         <SessionPanel />
       </Card>
 
-      <h2 className="mb-1 text-lg font-semibold">Inspect a product image</h2>
+      <h3 className="mb-1 text-base font-semibold">Anomaly heatmap (Grad-CAM)</h3>
       <p className="mb-5 text-sm text-ink-muted">
-        Upload a product photo to detect defects with a CNN and a Grad-CAM explanation.
+        Secondary view: a CNN classifies good vs defect and highlights the region it focused
+        on. Use the detector above for localized, labeled boxes.
       </p>
 
       <Card className="p-6">

@@ -38,3 +38,6 @@ Thumbs.db
 # Personal working notes (not part of the repo)
 PLAN.md
 RULES.md
+
+# Model weight blobs (never committed; weights live under models/ or are downloaded)
+*.pt

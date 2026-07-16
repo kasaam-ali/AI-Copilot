@@ -32,6 +32,7 @@ class HealthBand(str, Enum):
 
 class ModelType(str, Enum):
     image = "image"
+    detection = "detection"
     tabular = "tabular"
     timeseries = "timeseries"
     audio = "audio"

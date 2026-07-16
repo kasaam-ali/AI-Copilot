@@ -36,6 +36,31 @@ export async function inspectImage(file: File): Promise<ImageInspectionResult> {
   return data
 }
 
+export interface Detection {
+  label: string
+  confidence: number
+  box: number[]
+}
+
+export interface DetectionResult {
+  inspection_id: number
+  prediction_id: number
+  detections: Detection[]
+  counts: Record<string, number>
+  n_defects: number
+  annotated_url: string
+  model_version: string
+  is_fallback: boolean
+  inference_ms: number
+}
+
+export async function detectImage(file: File): Promise<DetectionResult> {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await apiClient.post<DetectionResult>('/inspect/detect', form)
+  return data
+}
+
 export interface ShapContribution {
   feature: string
   value: number

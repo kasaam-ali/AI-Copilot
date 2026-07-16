@@ -25,6 +25,17 @@ def get_gradcam(prediction_id: int, session: Session = Depends(get_session)) -> 
     return FileResponse(path, media_type="image/png")
 
 
+@router.get("/detection/{prediction_id}")
+def get_detection(prediction_id: int, session: Session = Depends(get_session)) -> FileResponse:
+    prediction = session.get(Prediction, prediction_id)
+    if prediction is None or not prediction.artifact_path:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Annotated image not found")
+    path = Path(prediction.artifact_path)
+    if not path.exists():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Annotated file missing")
+    return FileResponse(path, media_type="image/png")
+
+
 @router.get("/shap/{prediction_id}")
 def get_shap(prediction_id: int, session: Session = Depends(get_session)) -> dict:
     prediction = session.get(Prediction, prediction_id)
