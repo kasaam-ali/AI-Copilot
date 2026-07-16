@@ -1,7 +1,6 @@
-import { Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Hero3D } from '../components/landing/Hero3D'
+import { InspectionShowcase } from '../components/landing/InspectionShowcase'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -160,14 +159,11 @@ export function LandingPage() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.15 }}
-          className="relative h-[340px] md:h-[460px]"
+          transition={{ duration: 0.7, delay: 0.15 }}
         >
-          <Suspense fallback={<div className="h-full w-full animate-pulse rounded-xl bg-surface-panel" />}>
-            <Hero3D />
-          </Suspense>
+          <InspectionShowcase />
         </motion.div>
       </section>
 

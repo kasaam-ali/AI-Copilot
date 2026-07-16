@@ -6,9 +6,12 @@ Short daily notes on what was built and why. Newest entries at the top.
 
 - Registered the Colab-trained NEU-DET YOLOv8n detector (mAP@0.50 = 0.76, 6 defect classes)
   as the active detection model — image/video/live now output real defect-class labels.
-- New animated landing page (`/`) with a react-three-fiber 3D hero (distorted wireframe core
-  + floating defect tags), framer-motion entrance/scroll animations, a capabilities strip,
-  feature grid, pipeline and CTAs, all routing to the dashboard.
+- New animated landing page (`/`) with a framer-motion inspection showcase — a cycling
+  viewport of four product scenes (steel sheet, metal casting, PCB, textile) with an animated
+  scan line and defect boxes + labels drawing in — plus entrance/scroll animations, a
+  capabilities strip, feature grid, pipeline and CTAs, all routing to the dashboard.
+  (Replaced an earlier abstract 3D hero with real product scenes; dropped the three.js
+  dependency, cutting the bundle from ~1.28 MB to ~458 KB.)
 - Added a `brand` cyan accent + gradient/animation utilities; polished the AppShell (gradient
   logo linking home, brand-accent active nav, "system online" indicator, back-to-home link).
 
