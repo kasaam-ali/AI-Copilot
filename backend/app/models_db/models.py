@@ -43,6 +43,13 @@ class DecisionType(str, Enum):
     modify = "modify"
 
 
+class JobStatus(str, Enum):
+    queued = "queued"
+    running = "running"
+    succeeded = "succeeded"
+    failed = "failed"
+
+
 class Inspection(SQLModel, table=True):
     __tablename__ = "inspection"
 
@@ -100,6 +107,25 @@ class HitlDecision(SQLModel, table=True):
     corrected_fields: dict = Field(default_factory=dict, sa_type=JSON)
     note: str | None = None
     feedback_path: str | None = None
+
+
+class RetrainJob(SQLModel, table=True):
+    __tablename__ = "retrain_job"
+
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=utcnow)
+    finished_at: datetime | None = None
+
+    model_type: str = Field(index=True)
+    status: JobStatus = Field(default=JobStatus.queued)
+    progress: int = Field(default=0)
+
+    base_version: str | None = None
+    new_version: str | None = None
+    num_corrections: int = 0
+    num_samples: int = 0
+    metrics: dict = Field(default_factory=dict, sa_type=JSON)
+    message: str | None = None
 
 
 class ModelVersion(SQLModel, table=True):

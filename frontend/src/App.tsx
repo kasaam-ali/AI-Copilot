@@ -5,6 +5,7 @@ import { ResultsPage } from './pages/ResultsPage'
 import { ReviewQueuePage } from './pages/ReviewQueuePage'
 import { InspectionDetailPage } from './pages/InspectionDetailPage'
 import { ReportsPage } from './pages/ReportsPage'
+import { ModelsPage } from './pages/ModelsPage'
 import { HealthPage } from './pages/HealthPage'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/review" element={<ReviewQueuePage />} />
         <Route path="/review/:id" element={<InspectionDetailPage />} />
         <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/models" element={<ModelsPage />} />
         <Route path="/system" element={<HealthPage />} />
       </Route>
     </Routes>

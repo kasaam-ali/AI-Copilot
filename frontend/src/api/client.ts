@@ -298,6 +298,57 @@ export async function getShapExplanation(predictionId: number): Promise<ShapExpl
   return data
 }
 
+export interface RetrainJob {
+  id: number
+  created_at: string
+  finished_at: string | null
+  model_type: string
+  status: 'queued' | 'running' | 'succeeded' | 'failed'
+  progress: number
+  base_version: string | null
+  new_version: string | null
+  num_corrections: number
+  num_samples: number
+  metrics: { auroc_new?: number; auroc_old?: number; eval_size?: number; delta?: number | null }
+  message: string | null
+}
+
+export interface ModelVersion {
+  version: string
+  created_at: string | null
+  is_active: boolean
+  metrics: Record<string, unknown>
+}
+
+export interface ModelVersions {
+  model_type: string
+  active: string | null
+  versions: ModelVersion[]
+}
+
+export async function getModelVersions(modelType: string): Promise<ModelVersions> {
+  const { data } = await apiClient.get<ModelVersions>(`/models/${modelType}`)
+  return data
+}
+
+export async function startRetrain(modelType: string): Promise<RetrainJob> {
+  const { data } = await apiClient.post<RetrainJob>(`/retrain/${modelType}`)
+  return data
+}
+
+export async function getRetrainJob(jobId: number): Promise<RetrainJob> {
+  const { data } = await apiClient.get<RetrainJob>(`/retrain/jobs/${jobId}`)
+  return data
+}
+
+export async function activateVersion(
+  modelType: string,
+  version: string,
+): Promise<ModelVersions> {
+  const { data } = await apiClient.post<ModelVersions>(`/models/${modelType}/${version}/activate`)
+  return data
+}
+
 // Named sensors match scripts/synth_timeseries.py, in scaler order.
 const SENSOR_PRESETS: Record<string, number[]> = {
   healthy: [61, 1.6, 42, 66, 10.2, 2.98],

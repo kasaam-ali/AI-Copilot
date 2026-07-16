@@ -2,6 +2,20 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 6 — Active-Learning Flywheel
+
+- New `retrain_job` table and `active_learning.py`: inspector corrections (from
+  `data/feedback/`) are assembled with a subset of the original data (corrections
+  oversampled x3), a fresh version is trained (small subset, few epochs, seconds) and
+  registered INACTIVE with a held-out AUROC comparison against the current active model.
+- Runs as a FastAPI BackgroundTask; the job row carries live progress. Endpoints:
+  `POST /retrain/{model_type}`, `GET /retrain/jobs`, `GET /retrain/jobs/{id}`,
+  `GET /models/{model_type}`, `POST /models/{model_type}/{version}/activate` (human-gated
+  promotion with a hot-swap of the served bundle; rollback = activate the previous version).
+- Implemented for the tabular model (its corrections carry a corrected label + named
+  features). Frontend: a Models page with a retrain trigger, polled progress bar, an
+  old-vs-new metrics diff, and per-version Activate buttons.
+
 ## Phase 5 — LLM Layer + Report
 
 - Provider-agnostic LLM layer: one OpenAI-compatible client covers Groq, OpenRouter, z.AI
