@@ -34,3 +34,20 @@ def get_shap(prediction_id: int, session: Session = Depends(get_session)) -> dic
         "base_value": prediction.raw_scores.get("base_value"),
         "shap": prediction.raw_scores["shap"],
     }
+
+
+@router.get("/timeseries/{prediction_id}")
+def get_timeseries(prediction_id: int, session: Session = Depends(get_session)) -> dict:
+    prediction = session.get(Prediction, prediction_id)
+    if (
+        prediction is None
+        or not prediction.raw_scores
+        or "attributions" not in prediction.raw_scores
+    ):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Attributions not found")
+    return {
+        "sensors": prediction.raw_scores.get("sensors"),
+        "attributions": prediction.raw_scores["attributions"],
+        "sensor_importance": prediction.raw_scores.get("sensor_importance"),
+        "rul": prediction.raw_scores.get("rul"),
+    }

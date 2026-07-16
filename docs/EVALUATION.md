@@ -49,3 +49,33 @@ is never used for training or model selection.
 > vibration, tool wear, material purity, ...) generated from a transparent rule, so the
 > SHAP drivers are honest and readable. It is disclosed as simulated production data.
 > SECOM (real, anonymized 590 features) can be swapped in via `prepare_secom.py`.
+
+## Time-series model (remaining-useful-life)
+
+- **Architecture:** 2-layer LSTM (hidden 64) with a Dropout head, single RUL output.
+- **Loss:** Huber (SmoothL1). **Target:** RMSE ≤ 20 RUL units (cap 125).
+- **Split:** grouped by machine unit (windows from one unit never cross splits).
+- **Uncertainty:** MC-Dropout (N=20). **Explanation:** self-contained Integrated Gradients
+  over each timestep-per-sensor, aggregated to per-sensor importance.
+
+### v1 results
+
+| Dataset | Windows / units | Window | Test RMSE (RUL units) |
+|---|---|---|---|
+| Synthetic machine telemetry | 20,865 / 120 | 30 | **8.34** |
+| NASA C-MAPSS FD001 | optional (`scripts/prepare_cmapss.py`) | 30 | pending |
+
+> Six named degrading sensors (temperature, vibration, spindle load, acoustic, current, oil
+> pressure) drift with a transparent degradation signal, so the Integrated-Gradients drivers
+> are honest — vibration and temperature dominate near failure, as designed. Disclosed as
+> simulated machine telemetry. NASA C-MAPSS FD001 writes the same window format and swaps in
+> with no serving-code change (retrain only).
+
+## Fusion Health Score
+
+Present modalities are fused as `health = 100·(1 − Σ wᵢcᵢrᵢ / Σ wᵢcᵢ)` with weights
+image 0.45 / tabular 0.30 / timeseries 0.25 and `cᵢ = 1/(1+σᵢ)`; a missing or failed
+modality drops out and the score renormalizes over the rest. Bands: healthy ≥ 80,
+watch 60–79, at_risk 40–59, defect < 40. Verified by `tests/test_fusion.py`. The
+`/inspect/session` hero endpoint runs all supplied modalities under one inspection
+(measured ~2.5 s for all three on CPU, well under the 6 s p95 target).

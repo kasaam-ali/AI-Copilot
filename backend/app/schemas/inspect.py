@@ -47,3 +47,49 @@ class TabularInspectionResult(BaseModel):
 class TabularSchema(BaseModel):
     features: list[str]
     defaults: dict[str, float]
+
+
+class TimeSeriesInspectionRequest(BaseModel):
+    series: list[list[float]]
+
+
+class SensorImportance(BaseModel):
+    sensor: str
+    importance: float
+    magnitude: float
+
+
+class TimeSeriesInspectionResult(BaseModel):
+    inspection_id: int
+    prediction_id: int
+    label: str
+    rul: float
+    rul_cap: float
+    risk: float
+    confidence: float
+    uncertainty: float
+    sensors: list[str]
+    sensor_importance: list[SensorImportance]
+    model_version: str
+    weights_sha256: str
+    inference_ms: int
+
+
+class HealthDriver(BaseModel):
+    modality: str
+    weight: float
+    risk: float
+    uncertainty: float
+    contribution: float
+    share: float
+
+
+class SessionInspectionResult(BaseModel):
+    inspection_id: int
+    health_score: float | None
+    health_band: str
+    drivers: list[HealthDriver]
+    image: ImageInspectionResult | None = None
+    tabular: TabularInspectionResult | None = None
+    timeseries: TimeSeriesInspectionResult | None = None
+    errors: dict[str, str] = {}

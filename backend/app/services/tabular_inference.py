@@ -10,6 +10,7 @@ from sqlmodel import Session
 
 from app.models_db.models import Inspection, InspectionStatus, ModelType, Prediction
 from app.schemas.inspect import ShapContribution, TabularInspectionResult, TabularSchema
+from app.services.fusion import ModalitySignal
 from ml.tabular.explain import compute_shap
 from ml.tabular.infer import load_active_bundle, predict_tabular
 
@@ -20,8 +21,12 @@ def get_tabular_schema() -> TabularSchema:
     return TabularSchema(features=bundle.features, defaults=bundle.defaults)
 
 
-def run_tabular_inspection(session: Session, features: dict) -> TabularInspectionResult:
-    """Run defect-probability inference plus SHAP on a feature dict and persist it."""
+def infer_and_persist_tabular(
+    session: Session,
+    inspection: Inspection,
+    features: dict,
+) -> tuple[TabularInspectionResult, ModalitySignal]:
+    """Run defect-probability inference plus SHAP and persist under the given inspection."""
     input_sha = hashlib.sha256(
         json.dumps(features, sort_keys=True).encode("utf-8")
     ).hexdigest()
@@ -32,16 +37,6 @@ def run_tabular_inspection(session: Session, features: dict) -> TabularInspectio
         bundle.model, bundle.background, x_scaled, bundle.features, raw
     )
     inference_ms = int((time.perf_counter() - start) * 1000)
-
-    inspection = Inspection(
-        category="tabular",
-        status=InspectionStatus.pending_review,
-        meta={"features": features},
-        input_manifest={"tabular": input_sha},
-    )
-    session.add(inspection)
-    session.commit()
-    session.refresh(inspection)
 
     pred_row = Prediction(
         inspection_id=inspection.id,
@@ -56,10 +51,12 @@ def run_tabular_inspection(session: Session, features: dict) -> TabularInspectio
         inference_ms=inference_ms,
     )
     session.add(pred_row)
+    inspection.input_manifest = {**inspection.input_manifest, "tabular": input_sha}
+    session.add(inspection)
     session.commit()
     session.refresh(pred_row)
 
-    return TabularInspectionResult(
+    result = TabularInspectionResult(
         inspection_id=inspection.id,
         prediction_id=pred_row.id,
         label=prediction.label,
@@ -72,3 +69,20 @@ def run_tabular_inspection(session: Session, features: dict) -> TabularInspectio
         weights_sha256=bundle.weights_sha256,
         inference_ms=inference_ms,
     )
+    signal = ModalitySignal(risk=prediction.defect_probability, uncertainty=prediction.uncertainty)
+    return result, signal
+
+
+def run_tabular_inspection(session: Session, features: dict) -> TabularInspectionResult:
+    """Run defect-probability inference plus SHAP as a standalone inspection."""
+    inspection = Inspection(
+        category="tabular",
+        status=InspectionStatus.pending_review,
+        meta={"features": features},
+    )
+    session.add(inspection)
+    session.commit()
+    session.refresh(inspection)
+
+    result, _ = infer_and_persist_tabular(session, inspection, features)
+    return result

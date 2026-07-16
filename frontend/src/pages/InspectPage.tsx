@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { inspectImage } from '../api/client'
 import { Card } from '../components/primitives'
 import { TabularForm } from '../components/features/TabularForm'
+import { SessionPanel } from '../components/features/SessionPanel'
 
 export function InspectPage() {
   const navigate = useNavigate()
@@ -25,6 +26,15 @@ export function InspectPage() {
 
   return (
     <div className="max-w-2xl">
+      <h2 className="mb-1 text-lg font-semibold">Full multimodal inspection</h2>
+      <p className="mb-4 text-sm text-ink-muted">
+        Fuse vision, process data and machine health into a single Health Score with a
+        per-modality breakdown.
+      </p>
+      <Card className="mb-10 p-6">
+        <SessionPanel />
+      </Card>
+
       <h2 className="mb-1 text-lg font-semibold">Inspect a product image</h2>
       <p className="mb-5 text-sm text-ink-muted">
         Upload a product photo to detect defects with a CNN and a Grad-CAM explanation.
