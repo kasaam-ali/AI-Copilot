@@ -21,18 +21,18 @@ interface Scene {
 const SCENES: Scene[] = [
   {
     name: 'Circuit board',
-    image: '/showcase/pcb.jpg',
+    image: '/showcase/circuit.jpg',
     boxes: [
-      { x: 30, y: 6, w: 20, h: 26, label: 'solder defect', conf: 0.9 },
-      { x: 55, y: 40, w: 14, h: 20, label: 'missing part', conf: 0.83 },
+      { x: 18, y: 34, w: 24, h: 34, label: 'solder defect', conf: 0.9 },
+      { x: 58, y: 34, w: 13, h: 22, label: 'missing part', conf: 0.84 },
     ],
   },
   {
-    name: 'Bottling line',
-    image: '/showcase/bottle.jpg',
+    name: 'Silicon chip',
+    image: '/showcase/chip.jpg',
     boxes: [
-      { x: 40, y: 22, w: 12, h: 40, label: 'fill level', conf: 0.88 },
-      { x: 60, y: 26, w: 10, h: 12, label: 'cap defect', conf: 0.81 },
+      { x: 24, y: 22, w: 26, h: 26, label: 'surface defect', conf: 0.89 },
+      { x: 64, y: 58, w: 20, h: 22, label: 'pin damage', conf: 0.82 },
     ],
   },
   {
@@ -47,8 +47,8 @@ const SCENES: Scene[] = [
     name: 'Metal surface',
     image: '/showcase/metal.jpg',
     boxes: [
-      { x: 52, y: 34, w: 22, h: 24, label: 'corrosion', conf: 0.91 },
-      { x: 20, y: 45, w: 14, h: 18, label: 'pitting', conf: 0.82 },
+      { x: 50, y: 32, w: 22, h: 24, label: 'corrosion', conf: 0.91 },
+      { x: 18, y: 44, w: 14, h: 18, label: 'pitting', conf: 0.82 },
     ],
   },
 ]

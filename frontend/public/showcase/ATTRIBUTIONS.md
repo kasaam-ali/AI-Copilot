@@ -1,10 +1,9 @@
 # Showcase image attributions
 
-Sample product photographs used on the landing page are Creative Commons works
-sourced from Flickr (via loremflickr.com). They are placeholders — swap for your
-own or commercially licensed imagery for production.
+Sample product photographs on the landing page are Creative Commons works from Flickr
+(via loremflickr.com). Placeholders — swap for owned/commercially licensed imagery for production.
 
-- pcb.jpg — Xenador77 (Flickr, CC BY-NC-SA)
-- bottle.jpg — European Union in Ukraine (Flickr, CC BY-SA)
+- circuit.jpg — geerlingguy (Flickr, CC BY-NC-SA)
+- chip.jpg — eisenrah (Flickr, CC BY-NC)
 - textile.jpg — ArtSchool1Rehab (Flickr, CC BY)
 - metal.jpg — wyliepoon (Flickr, CC BY-NC-ND)
