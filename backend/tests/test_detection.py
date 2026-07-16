@@ -76,6 +76,19 @@ def _short_avi() -> bytes:
     return data
 
 
+def test_frame_detection_is_stateless() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/inspect/frame",
+            files={"file": ("frame.jpg", _png(), "image/jpeg")},
+        )
+        assert response.status_code == 200
+        body = response.json()
+        for key in ("detections", "width", "height", "model_version", "is_fallback"):
+            assert key in body
+        assert body["width"] > 0 and body["height"] > 0
+
+
 def test_detect_video_aggregates_frames() -> None:
     with TestClient(app) as client:
         response = client.post(

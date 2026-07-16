@@ -2,6 +2,15 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 7R.3 — Live camera defect detection
+
+- `POST /inspect/frame`: stateless single-frame detection (nothing persisted) so the browser
+  can poll it in real time; returns boxes + the source frame size.
+- Frontend `LiveInspect` page: `getUserMedia` → `<video>` with an overlay `<canvas>`; captures
+  a frame every ~400 ms, posts it, and draws scaled boxes + labels live, with a defects-in-frame
+  tally, latency, and a peak-per-class summary. Enabled the "Live Inspection" nav.
+- Needs a secure context (localhost/https) for camera access; runs on CPU.
+
 ## Phase 7R.2 — Video defect detection
 
 - `POST /inspect/detect/video`: sample up to 24 frames evenly across an uploaded clip

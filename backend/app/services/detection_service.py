@@ -13,7 +13,7 @@ from sqlmodel import Session
 from app.config import get_settings
 from app.models_db.models import Inspection, InspectionStatus, ModelType, Prediction
 from app.schemas.inspect import Detection as DetectionDTO
-from app.schemas.inspect import DetectionResult, VideoDetectionResult
+from app.schemas.inspect import DetectionResult, FrameDetectionResult, VideoDetectionResult
 from ml.detection.annotate import annotate
 from ml.detection.infer import detect
 
@@ -79,6 +79,22 @@ def run_detection_inspection(
         counts=counts,
         n_defects=len(detections),
         annotated_url=f"/api/v1/explain/detection/{pred_row.id}",
+        model_version=bundle.version,
+        is_fallback=bundle.is_fallback,
+        inference_ms=inference_ms,
+    )
+
+
+def run_frame_detection(file_bytes: bytes) -> FrameDetectionResult:
+    """Detect on a single live-camera frame. Stateless and fast; nothing is persisted."""
+    image = Image.open(io.BytesIO(file_bytes)).convert("RGB")
+    start = time.perf_counter()
+    detections, bundle = detect(image)
+    inference_ms = int((time.perf_counter() - start) * 1000)
+    return FrameDetectionResult(
+        detections=[DetectionDTO(label=d.label, confidence=d.confidence, box=d.box) for d in detections],
+        width=image.width,
+        height=image.height,
         model_version=bundle.version,
         is_fallback=bundle.is_fallback,
         inference_ms=inference_ms,

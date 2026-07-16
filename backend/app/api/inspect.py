@@ -15,11 +15,16 @@ from app.schemas.inspect import (
     TabularInspectionRequest,
     TabularInspectionResult,
     TabularSchema,
+    FrameDetectionResult,
     TimeSeriesInspectionRequest,
     TimeSeriesInspectionResult,
     VideoDetectionResult,
 )
-from app.services.detection_service import run_detection_inspection, run_video_detection
+from app.services.detection_service import (
+    run_detection_inspection,
+    run_frame_detection,
+    run_video_detection,
+)
 from app.services.image_inference import run_image_inspection
 from app.services.session_inference import run_session
 from app.services.tabular_inference import get_tabular_schema, run_tabular_inspection
@@ -104,6 +109,17 @@ async def inspect_detect_video(
         return run_video_detection(session, data, file.filename)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+
+
+@router.post("/frame", response_model=FrameDetectionResult)
+async def inspect_frame(file: UploadFile = File(...)) -> FrameDetectionResult:
+    """Detect defects on one live-camera frame (stateless, for real-time overlay)."""
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Frame too large."
+        )
+    return run_frame_detection(data)
 
 
 @router.get("/tabular/schema", response_model=TabularSchema)

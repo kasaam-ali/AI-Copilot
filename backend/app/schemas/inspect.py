@@ -79,6 +79,15 @@ class VideoDetectionResult(BaseModel):
     inference_ms: int
 
 
+class FrameDetectionResult(BaseModel):
+    detections: list[Detection]
+    width: int
+    height: int
+    model_version: str
+    is_fallback: bool
+    inference_ms: int
+
+
 class TimeSeriesInspectionRequest(BaseModel):
     series: list[list[float]]
 

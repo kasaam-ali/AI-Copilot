@@ -80,6 +80,22 @@ export async function detectVideo(file: File): Promise<VideoDetectionResult> {
   return data
 }
 
+export interface FrameDetectionResult {
+  detections: Detection[]
+  width: number
+  height: number
+  model_version: string
+  is_fallback: boolean
+  inference_ms: number
+}
+
+export async function detectFrame(blob: Blob): Promise<FrameDetectionResult> {
+  const form = new FormData()
+  form.append('file', blob, 'frame.jpg')
+  const { data } = await apiClient.post<FrameDetectionResult>('/inspect/frame', form)
+  return data
+}
+
 export interface ShapContribution {
   feature: string
   value: number

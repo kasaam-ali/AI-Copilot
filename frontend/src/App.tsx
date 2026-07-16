@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { InspectPage } from './pages/InspectPage'
+import { LiveInspectPage } from './pages/LiveInspectPage'
 import { ResultsPage } from './pages/ResultsPage'
 import { ReviewQueuePage } from './pages/ReviewQueuePage'
 import { InspectionDetailPage } from './pages/InspectionDetailPage'
@@ -14,6 +15,7 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to="/inspect" replace />} />
         <Route path="/inspect" element={<InspectPage />} />
+        <Route path="/live" element={<LiveInspectPage />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/review" element={<ReviewQueuePage />} />
         <Route path="/review/:id" element={<InspectionDetailPage />} />
