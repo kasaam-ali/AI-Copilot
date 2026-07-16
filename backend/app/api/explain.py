@@ -36,6 +36,18 @@ def get_detection(prediction_id: int, session: Session = Depends(get_session)) -
     return FileResponse(path, media_type="image/png")
 
 
+@router.get("/detection-frame/{prediction_id}/{index}")
+def get_detection_frame(
+    prediction_id: int, index: int, session: Session = Depends(get_session)
+) -> FileResponse:
+    from app.config import get_settings
+
+    path = get_settings().artifact_path / "detection_video" / str(prediction_id) / f"{index}.png"
+    if session.get(Prediction, prediction_id) is None or not path.exists():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Frame not found")
+    return FileResponse(path, media_type="image/png")
+
+
 @router.get("/shap/{prediction_id}")
 def get_shap(prediction_id: int, session: Session = Depends(get_session)) -> dict:
     prediction = session.get(Prediction, prediction_id)

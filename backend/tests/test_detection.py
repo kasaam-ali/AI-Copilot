@@ -55,3 +55,39 @@ def test_detect_rejects_non_image() -> None:
             files={"file": ("note.txt", b"hello", "text/plain")},
         )
         assert response.status_code == 415
+
+
+def _short_avi() -> bytes:
+    import os
+    import tempfile
+
+    import cv2
+    import numpy as np
+
+    frame = np.full((240, 320, 3), 120, dtype=np.uint8)
+    path = os.path.join(tempfile.gettempdir(), "sq_test_clip.avi")
+    writer = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"MJPG"), 5, (320, 240))
+    for _ in range(10):
+        writer.write(frame)
+    writer.release()
+    with open(path, "rb") as fh:
+        data = fh.read()
+    os.unlink(path)
+    return data
+
+
+def test_detect_video_aggregates_frames() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/inspect/detect/video",
+            files={"file": ("clip.avi", _short_avi(), "video/x-msvideo")},
+        )
+        assert response.status_code == 200
+        body = response.json()
+        for key in ("frames_sampled", "total_defects", "counts", "sample_frame_urls", "model_version"):
+            assert key in body
+        assert body["frames_sampled"] > 0
+        for url in body["sample_frame_urls"]:
+            frame = client.get(url)
+            assert frame.status_code == 200
+            assert frame.headers["content-type"].startswith("image/")

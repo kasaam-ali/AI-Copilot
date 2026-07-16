@@ -67,6 +67,18 @@ class DetectionResult(BaseModel):
     inference_ms: int
 
 
+class VideoDetectionResult(BaseModel):
+    inspection_id: int
+    prediction_id: int
+    frames_sampled: int
+    total_defects: int
+    counts: dict[str, int]
+    sample_frame_urls: list[str]
+    model_version: str
+    is_fallback: bool
+    inference_ms: int
+
+
 class TimeSeriesInspectionRequest(BaseModel):
     series: list[list[float]]
 

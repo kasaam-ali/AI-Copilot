@@ -17,8 +17,9 @@ from app.schemas.inspect import (
     TabularSchema,
     TimeSeriesInspectionRequest,
     TimeSeriesInspectionResult,
+    VideoDetectionResult,
 )
-from app.services.detection_service import run_detection_inspection
+from app.services.detection_service import run_detection_inspection, run_video_detection
 from app.services.image_inference import run_image_inspection
 from app.services.session_inference import run_session
 from app.services.tabular_inference import get_tabular_schema, run_tabular_inspection
@@ -76,6 +77,33 @@ async def inspect_detect(
             detail="File too large (max 20 MB).",
         )
     return run_detection_inspection(session, data, file.filename)
+
+
+MAX_VIDEO_BYTES = 80 * 1024 * 1024
+ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/x-msvideo", "video/webm", "application/octet-stream"}
+
+
+@router.post("/detect/video", response_model=VideoDetectionResult)
+async def inspect_detect_video(
+    file: UploadFile = File(...),
+    session: Session = Depends(get_session),
+) -> VideoDetectionResult:
+    """Sample frames from an uploaded video and detect defects across them."""
+    if file.content_type not in ALLOWED_VIDEO_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported video type: {file.content_type}",
+        )
+    data = await file.read()
+    if len(data) > MAX_VIDEO_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="Video too large (max 80 MB).",
+        )
+    try:
+        return run_video_detection(session, data, file.filename)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 @router.get("/tabular/schema", response_model=TabularSchema)

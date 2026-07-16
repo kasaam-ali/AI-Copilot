@@ -2,6 +2,16 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 7R.2 — Video defect detection
+
+- `POST /inspect/detect/video`: sample up to 24 frames evenly across an uploaded clip
+  (`cv2.VideoCapture`), run YOLO detection on each, aggregate per-class counts + total
+  detections, and keep the frames with the most detections as annotated samples served via
+  `GET /explain/detection-frame/{prediction_id}/{index}`.
+- Frontend `VideoDetectionPanel`: upload a clip → frames-scanned / total-detections / time
+  stats, per-class count chips, and a strip of annotated sample frames. Added under the image
+  detector on Inspect.
+
 ## Phase 7R.1 — Visual defect detection (labeled bounding boxes)
 
 - Benchmarked against commercial inspection copilots (Akridata, Google Visual Inspection AI,

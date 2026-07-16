@@ -7,6 +7,7 @@ import { TabularForm } from '../components/features/TabularForm'
 import { SessionPanel } from '../components/features/SessionPanel'
 import { DocSummaryCard } from '../components/features/DocSummaryCard'
 import { DetectionPanel } from '../components/features/DetectionPanel'
+import { VideoDetectionPanel } from '../components/features/VideoDetectionPanel'
 
 export function InspectPage() {
   const navigate = useNavigate()
@@ -33,8 +34,16 @@ export function InspectPage() {
         Upload a product photo — the detector localizes each defect with a labeled bounding
         box and a confidence score.
       </p>
-      <Card className="mb-10 p-6">
+      <Card className="mb-8 p-6">
         <DetectionPanel />
+      </Card>
+
+      <h3 className="mb-1 text-base font-semibold">Video inspection</h3>
+      <p className="mb-4 text-sm text-ink-muted">
+        Upload a clip — frames are sampled and defects are counted across the whole video.
+      </p>
+      <Card className="mb-10 p-6">
+        <VideoDetectionPanel />
       </Card>
 
       <h2 className="mb-1 text-lg font-semibold">Full multimodal inspection</h2>
