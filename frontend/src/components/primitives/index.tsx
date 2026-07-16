@@ -11,8 +11,8 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-xl border border-surface-border bg-surface-raised shadow-lg shadow-black/20 ${
-        hover ? 'transition-colors hover:border-brand/40' : ''
+      className={`rounded-xl border border-surface-border bg-surface-raised shadow-sm shadow-black/5 ${
+        hover ? 'transition-colors hover:border-brand/50 hover:shadow-md' : ''
       } ${className}`}
     >
       {children}
@@ -29,8 +29,8 @@ export function Button({ children, className = '', variant = 'primary', ...props
     'inline-flex cursor-pointer items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50'
   const styles =
     variant === 'primary'
-      ? 'bg-brand text-surface hover:bg-brand-glow hover:shadow-md hover:shadow-brand/20'
-      : 'border border-surface-border bg-surface-panel text-ink-muted hover:border-ink-faint hover:text-ink'
+      ? 'bg-brand text-white hover:bg-brand-deep hover:shadow-md hover:shadow-brand/25'
+      : 'border border-surface-border bg-surface-raised text-ink-muted hover:border-ink-faint hover:text-ink'
   return (
     <button className={`${base} ${styles} ${className}`} {...props}>
       {children}
@@ -47,7 +47,7 @@ export function Badge({ children, color = 'neutral' }: { children: ReactNode; co
     risk: 'bg-status-risk/15 text-status-risk',
     defect: 'bg-status-defect/15 text-status-defect',
     neutral: 'bg-surface-panel text-ink-muted',
-    brand: 'bg-brand/15 text-brand-glow',
+    brand: 'bg-brand/10 text-brand-deep',
   }
   return (
     <span

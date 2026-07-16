@@ -103,13 +103,13 @@ export function LandingPage() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-surface text-ink">
       {/* Ambient glows */}
-      <div className="pointer-events-none absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-brand/20 blur-[130px]" />
-      <div className="pointer-events-none absolute -right-40 top-40 h-[460px] w-[460px] rounded-full bg-accent/15 blur-[130px]" />
+      <div className="pointer-events-none absolute -left-40 -top-40 h-[520px] w-[520px] rounded-full bg-brand/10 blur-[150px]" />
+      <div className="pointer-events-none absolute -right-40 top-40 h-[460px] w-[460px] rounded-full bg-accent/10 blur-[150px]" />
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+            'linear-gradient(#1f2733 1px, transparent 1px), linear-gradient(90deg, #1f2733 1px, transparent 1px)',
           backgroundSize: '48px 48px',
         }}
       />
@@ -119,7 +119,7 @@ export function LandingPage() {
         <Logo />
         <Link
           to="/inspect"
-          className="rounded-md bg-gradient-to-r from-brand to-accent px-4 py-2 text-sm font-semibold text-surface transition-transform hover:scale-105"
+          className="rounded-md bg-gradient-to-r from-brand to-accent px-4 py-2 text-sm font-semibold text-white transition-transform hover:scale-105"
         >
           Launch Dashboard
         </Link>
@@ -128,7 +128,7 @@ export function LandingPage() {
       {/* Hero */}
       <section className="relative z-10 mx-auto grid max-w-6xl items-center gap-8 px-6 pb-16 pt-6 md:grid-cols-2 md:pt-12">
         <motion.div initial="hidden" animate="show" variants={fadeUp} transition={{ duration: 0.6 }}>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs text-brand-glow">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-xs font-medium text-brand-deep">
             <span className="h-1.5 w-1.5 animate-pulseGlow rounded-full bg-brand" />
             AI Co-Pilot for Manufacturing Quality
           </div>
@@ -145,7 +145,7 @@ export function LandingPage() {
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Link
               to="/inspect"
-              className="rounded-md bg-gradient-to-r from-brand to-accent px-5 py-2.5 text-sm font-semibold text-surface transition-transform hover:scale-105"
+              className="rounded-md bg-gradient-to-r from-brand to-accent px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
             >
               Go to Dashboard →
             </Link>
@@ -251,7 +251,7 @@ export function LandingPage() {
           </p>
           <Link
             to="/inspect"
-            className="mt-6 inline-block rounded-md bg-gradient-to-r from-brand to-accent px-6 py-3 text-sm font-semibold text-surface transition-transform hover:scale-105"
+            className="mt-6 inline-block rounded-md bg-gradient-to-r from-brand to-accent px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105"
           >
             Go to Dashboard →
           </Link>

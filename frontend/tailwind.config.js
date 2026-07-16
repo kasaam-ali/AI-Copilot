@@ -5,30 +5,30 @@ export default {
     extend: {
       colors: {
         surface: {
-          DEFAULT: '#0a0e13',
-          raised: '#111823',
-          panel: '#18212e',
-          border: '#26313f',
+          DEFAULT: '#f5f6f8',
+          raised: '#ffffff',
+          panel: '#eef1f4',
+          border: '#dce0e6',
         },
         accent: {
           DEFAULT: '#f5a623',
           muted: '#8a6414',
         },
         brand: {
-          DEFAULT: '#22d3ee',
-          deep: '#0891b2',
-          glow: '#67e8f9',
+          DEFAULT: '#1a73e8',
+          deep: '#1557b0',
+          glow: '#4285f4',
         },
         status: {
-          healthy: '#10b981',
-          watch: '#f5a623',
-          risk: '#f97316',
-          defect: '#ef4444',
+          healthy: '#188038',
+          watch: '#b06000',
+          risk: '#c26a1d',
+          defect: '#c5221f',
         },
         ink: {
-          DEFAULT: '#e6edf3',
-          muted: '#8b98a9',
-          faint: '#5b6675',
+          DEFAULT: '#1f2733',
+          muted: '#5b6672',
+          faint: '#8a95a1',
         },
       },
       fontFamily: {

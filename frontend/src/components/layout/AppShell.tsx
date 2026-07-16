@@ -34,9 +34,9 @@ export function AppShell() {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  `relative rounded-md px-3 py-2 text-sm transition-colors ${
+                  `relative rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-brand/10 text-brand-glow'
+                      ? 'bg-brand/10 text-brand-deep'
                       : 'text-ink-muted hover:bg-surface-panel hover:text-ink'
                   }`
                 }

@@ -48,7 +48,7 @@ export function HealthScoreGauge({
     <div className="flex flex-col items-center">
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img"
         aria-label={`Health score ${score === null ? 'unknown' : Math.round(score)} of 100, ${BAND_LABEL[band]}`}>
-        <path d={arc(cx, cy, r, 180, 0)} fill="none" stroke="#232c3a" strokeWidth={14} strokeLinecap="round" />
+        <path d={arc(cx, cy, r, 180, 0)} fill="none" stroke="#e5e7eb" strokeWidth={14} strokeLinecap="round" />
         {score !== null && (
           <path
             d={arc(cx, cy, r, 180, valueEnd)}

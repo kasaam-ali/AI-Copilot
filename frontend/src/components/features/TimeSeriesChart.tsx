@@ -3,7 +3,7 @@ import { getTimeseriesExplanation } from '../../api/client'
 
 // Diverging scale, neutral midpoint: green raises remaining life, red shortens it.
 function cellColor(value: number, max: number): string {
-  if (max <= 0) return '#161d28'
+  if (max <= 0) return '#eef1f4'
   const intensity = Math.min(1, Math.abs(value) / max)
   const alpha = 0.12 + intensity * 0.78
   const hex = value >= 0 ? '16,185,129' : '239,68,68'
