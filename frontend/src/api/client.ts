@@ -157,6 +157,84 @@ export async function inspectSession(input: SessionInput): Promise<SessionInspec
   return data
 }
 
+export interface InspectionSummary {
+  id: number
+  created_at: string
+  category: string | null
+  status: string
+  health_score: number | null
+  health_band: string
+  max_uncertainty: number | null
+  label: string | null
+  n_predictions: number
+}
+
+export interface PredictionSummary {
+  prediction_id: number
+  model_type: string
+  model_version: string
+  label: string | null
+  confidence: number | null
+  uncertainty: number | null
+  output: Record<string, unknown>
+  gradcam_url: string | null
+  inference_ms: number | null
+}
+
+export interface DecisionSummary {
+  id: number
+  created_at: string
+  decision: 'approve' | 'reject' | 'modify'
+  reviewer: string
+  corrected_label: string | null
+  corrected_fields: Record<string, unknown>
+  note: string | null
+}
+
+export interface InspectionDetail extends InspectionSummary {
+  product_ref: string | null
+  predictions: PredictionSummary[]
+  decisions: DecisionSummary[]
+}
+
+export interface FeedbackRequest {
+  inspection_id: number
+  decision: 'approve' | 'reject' | 'modify'
+  corrected_label?: string
+  corrected_fields?: Record<string, number>
+  note?: string
+}
+
+export async function getInspections(
+  sort: 'uncertainty' | 'recent' = 'uncertainty',
+  statusFilter?: string,
+): Promise<InspectionSummary[]> {
+  const { data } = await apiClient.get<InspectionSummary[]>('/inspections', {
+    params: { sort, status: statusFilter },
+  })
+  return data
+}
+
+export async function getInspection(id: number): Promise<InspectionDetail> {
+  const { data } = await apiClient.get<InspectionDetail>(`/inspections/${id}`)
+  return data
+}
+
+export async function submitFeedback(payload: FeedbackRequest) {
+  const { data } = await apiClient.post('/feedback', payload)
+  return data
+}
+
+export interface ShapExplanation {
+  base_value: number
+  shap: ShapContribution[]
+}
+
+export async function getShapExplanation(predictionId: number): Promise<ShapExplanation> {
+  const { data } = await apiClient.get<ShapExplanation>(`/explain/shap/${predictionId}`)
+  return data
+}
+
 // Named sensors match scripts/synth_timeseries.py, in scaler order.
 const SENSOR_PRESETS: Record<string, number[]> = {
   healthy: [61, 1.6, 42, 66, 10.2, 2.98],

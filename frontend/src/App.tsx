@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
 import { InspectPage } from './pages/InspectPage'
 import { ResultsPage } from './pages/ResultsPage'
+import { ReviewQueuePage } from './pages/ReviewQueuePage'
+import { InspectionDetailPage } from './pages/InspectionDetailPage'
 import { HealthPage } from './pages/HealthPage'
 
 export default function App() {
@@ -11,6 +13,8 @@ export default function App() {
         <Route index element={<Navigate to="/inspect" replace />} />
         <Route path="/inspect" element={<InspectPage />} />
         <Route path="/results" element={<ResultsPage />} />
+        <Route path="/review" element={<ReviewQueuePage />} />
+        <Route path="/review/:id" element={<InspectionDetailPage />} />
         <Route path="/system" element={<HealthPage />} />
       </Route>
     </Routes>

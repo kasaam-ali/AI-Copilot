@@ -37,6 +37,12 @@ class ModelType(str, Enum):
     audio = "audio"
 
 
+class DecisionType(str, Enum):
+    approve = "approve"
+    reject = "reject"
+    modify = "modify"
+
+
 class Inspection(SQLModel, table=True):
     __tablename__ = "inspection"
 
@@ -79,6 +85,21 @@ class Prediction(SQLModel, table=True):
     artifact_path: str | None = None
     input_sha256: str | None = None
     inference_ms: int | None = None
+
+
+class HitlDecision(SQLModel, table=True):
+    __tablename__ = "hitl_decision"
+
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=utcnow)
+
+    inspection_id: int = Field(foreign_key="inspection.id", index=True)
+    decision: DecisionType
+    reviewer: str = Field(default="inspector")
+    corrected_label: str | None = None
+    corrected_fields: dict = Field(default_factory=dict, sa_type=JSON)
+    note: str | None = None
+    feedback_path: str | None = None
 
 
 class ModelVersion(SQLModel, table=True):

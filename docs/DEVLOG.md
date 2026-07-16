@@ -2,6 +2,19 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 4 — Human-in-the-Loop
+
+- Added the `hitl_decision` table and a `DecisionType` enum (approve/reject/modify).
+- `hitl_service.py`: an uncertainty-first review queue (least-confident predictions surface
+  first), inspection detail assembly (predictions + XAI links + decision history), and
+  feedback capture that updates inspection status and writes the corrected sample to
+  `data/feedback/` for the Phase 6 flywheel.
+- Endpoints: `GET /inspections?sort=uncertainty|recent`, `GET /inspections/{id}`,
+  `POST /feedback`.
+- Frontend: a Review Queue page (uncertainty-sorted table), an inspection detail view that
+  re-renders every modality's XAI evidence (Grad-CAM / SHAP / IG heat strip) with confidence,
+  and approve/reject/modify decision buttons with a correction form and decision history.
+
 ## Phase 3 — Time-Series Modality + Fusion Health Score
 
 - Time-series RUL model: 2-layer LSTM (hidden 64) with a Dropout head, Huber loss, split
