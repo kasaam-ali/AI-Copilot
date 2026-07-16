@@ -2,6 +2,26 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Phase 5 — LLM Layer + Report
+
+- Provider-agnostic LLM layer: one OpenAI-compatible client covers Groq, OpenRouter, z.AI
+  and Gemini; a `FallbackLLMService` tries providers in `LLM_PROVIDER_ORDER` and cascades on
+  missing-key / transport / HTTP / timeout / schema-invalid (one repair retry each), with a
+  per-provider circuit breaker and a deterministic `mock` terminal so the app never fails
+  offline. Every response carries `provider_used` + `attempts[]`.
+- `POST /llm/analyze` narrates the root cause grounded in the fused score + per-modality
+  outputs + SHAP drivers + RUL; the narrative is stored on the inspection. The LLM only
+  explains — it never predicts.
+- `POST /llm/summarize-doc` extracts key points / entities / risks from an uploaded PDF
+  (pypdf) — the fourth data modality (text).
+- `report_service.py`: server-side matplotlib charts + ReportLab PDF and python-docx DOCX
+  reports (health gauge, Grad-CAM, SHAP, IG, narrative, recommendations, inspector decisions).
+  `POST /reports/{id}`, `GET /reports/{id}/download`, `GET /reports`.
+- Frontend: an AI analysis panel with the provider cascade and PDF/DOCX download, a document
+  summary card, and a Reports page.
+- Live check: Groq, OpenRouter and z.AI all respond with the supplied keys; Gemini returns
+  429 (quota) and cascades. Real Groq narrative in ~1.3 s; full offline path via mock.
+
 ## Phase 4 — Human-in-the-Loop
 
 - Added the `hitl_decision` table and a `DecisionType` enum (approve/reject/modify).

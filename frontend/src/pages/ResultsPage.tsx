@@ -12,6 +12,7 @@ import { GradCamViewer } from '../components/features/GradCamViewer'
 import { ShapBarChart } from '../components/features/ShapBarChart'
 import { HealthScoreGauge } from '../components/features/HealthScoreGauge'
 import { TimeSeriesChart } from '../components/features/TimeSeriesChart'
+import { AnalysisPanel } from '../components/features/AnalysisPanel'
 
 interface ResultsState {
   image?: ImageInspectionResult
@@ -244,6 +245,7 @@ export function ResultsPage() {
         {image && <ImageResultCard result={image} />}
         {tabular && <TabularResultCard result={tabular} />}
         {timeseries && <TimeSeriesResultCard result={timeseries} />}
+        {inspectionId !== undefined && <AnalysisPanel inspectionId={inspectionId} />}
       </div>
       <div className="mt-6">
         <Link to="/inspect" className="text-sm text-accent">

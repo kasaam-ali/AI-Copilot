@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
-from app.api import explain, feedback, health, inspect, inspections
+from app.api import explain, feedback, health, inspect, inspections, llm, reports
 from app.config import get_settings
 from app.database import init_db
 
@@ -17,6 +17,7 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown lifecycle."""
     settings = get_settings()
     settings.artifact_path.mkdir(parents=True, exist_ok=True)
+    settings.report_path.mkdir(parents=True, exist_ok=True)
     init_db()
     logger.info("{} backend started", settings.app_name)
     yield
@@ -50,3 +51,5 @@ app.include_router(inspect.router, prefix="/api/v1")
 app.include_router(explain.router, prefix="/api/v1")
 app.include_router(inspections.router, prefix="/api/v1")
 app.include_router(feedback.router, prefix="/api/v1")
+app.include_router(llm.router, prefix="/api/v1")
+app.include_router(reports.router, prefix="/api/v1")

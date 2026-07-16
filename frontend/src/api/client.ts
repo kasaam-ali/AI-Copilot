@@ -157,6 +157,69 @@ export async function inspectSession(input: SessionInput): Promise<SessionInspec
   return data
 }
 
+export interface LLMAttempt {
+  provider: string
+  ok: boolean
+  detail: string
+}
+
+export interface AnalyzeResult {
+  inspection_id: number
+  root_cause: string
+  contributing_factors: string[]
+  recommendations: string[]
+  confidence_note: string
+  provider_used: string
+  model: string | null
+  attempts: LLMAttempt[]
+}
+
+export interface DocSummaryResult {
+  key_points: string[]
+  entities: string[]
+  risks: string[]
+  char_count: number
+  provider_used: string
+  model: string | null
+  attempts: LLMAttempt[]
+}
+
+export interface ReportInfo {
+  inspection_id: number
+  format: string
+  size_bytes: number
+  download_url: string
+}
+
+export async function analyzeInspection(inspectionId: number): Promise<AnalyzeResult> {
+  const { data } = await apiClient.post<AnalyzeResult>('/llm/analyze', {
+    inspection_id: inspectionId,
+  })
+  return data
+}
+
+export async function summarizeDoc(file: File): Promise<DocSummaryResult> {
+  const form = new FormData()
+  form.append('file', file)
+  const { data } = await apiClient.post<DocSummaryResult>('/llm/summarize-doc', form)
+  return data
+}
+
+export async function generateReport(
+  inspectionId: number,
+  format: 'pdf' | 'docx',
+): Promise<ReportInfo> {
+  const { data } = await apiClient.post<ReportInfo>(`/reports/${inspectionId}`, null, {
+    params: { format },
+  })
+  return data
+}
+
+export async function getReports(): Promise<ReportInfo[]> {
+  const { data } = await apiClient.get<ReportInfo[]>('/reports')
+  return data
+}
+
 export interface InspectionSummary {
   id: number
   created_at: string

@@ -5,6 +5,7 @@ import { inspectImage } from '../api/client'
 import { Card } from '../components/primitives'
 import { TabularForm } from '../components/features/TabularForm'
 import { SessionPanel } from '../components/features/SessionPanel'
+import { DocSummaryCard } from '../components/features/DocSummaryCard'
 
 export function InspectPage() {
   const navigate = useNavigate()
@@ -95,6 +96,14 @@ export function InspectPage() {
       </p>
       <Card className="p-6">
         <TabularForm />
+      </Card>
+
+      <h3 className="mb-1 mt-8 text-base font-semibold">Document summary</h3>
+      <p className="mb-4 text-sm text-ink-muted">
+        Extract key points, entities and risks from a maintenance log or spec sheet (PDF).
+      </p>
+      <Card className="p-6">
+        <DocSummaryCard />
       </Card>
     </div>
   )

@@ -11,7 +11,7 @@ const navItems: NavItem[] = [
   { label: 'Live Inspection', to: '/live', ready: false },
   { label: 'Review Queue', to: '/review', ready: true },
   { label: 'Analytics', to: '/analytics', ready: false },
-  { label: 'Reports', to: '/reports', ready: false },
+  { label: 'Reports', to: '/reports', ready: true },
   { label: 'System', to: '/system', ready: true },
 ]
 
