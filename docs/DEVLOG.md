@@ -2,6 +2,16 @@
 
 Short daily notes on what was built and why. Newest entries at the top.
 
+## Landing page + NEU-DET detector + UI polish
+
+- Registered the Colab-trained NEU-DET YOLOv8n detector (mAP@0.50 = 0.76, 6 defect classes)
+  as the active detection model — image/video/live now output real defect-class labels.
+- New animated landing page (`/`) with a react-three-fiber 3D hero (distorted wireframe core
+  + floating defect tags), framer-motion entrance/scroll animations, a capabilities strip,
+  feature grid, pipeline and CTAs, all routing to the dashboard.
+- Added a `brand` cyan accent + gradient/animation utilities; polished the AppShell (gradient
+  logo linking home, brand-accent active nav, "system online" indicator, back-to-home link).
+
 ## Phase 7R.4 — Live machines auto-stream (no manual entry)
 
 - `POST /inspect/tabular/batch`: score many machines in one batched MC-Dropout pass

@@ -30,6 +30,23 @@ is never used for training or model selection.
 > The synthetic generator remains for offline pipeline validation; swapping datasets needs
 > no code change.
 
+## Detection model (defect localization)
+
+- **Architecture:** YOLOv8n object detector, trained on GPU (Colab) and loaded via
+  ultralytics `YOLO(...)`. Falls back to pretrained `yolov8n.pt` when no domain detector is
+  registered so the pipeline is never dead.
+- **Metric:** mAP@0.50 and mAP@0.50–0.95 on the held-out validation split.
+
+### v1 results
+
+| Dataset | Classes | mAP@0.50 | mAP@0.50–0.95 |
+|---|---|---|---|
+| **NEU-DET (steel surface defects, active)** | 6 | **0.760** | 0.443 |
+
+> Classes: crazing, inclusion, patches, pitted_surface, rolled-in_scale, scratches. The
+> detector localizes each defect with a labeled bounding box + confidence, and drives the
+> image, video and live-camera inspection paths.
+
 ## Tabular model (defect probability)
 
 - **Architecture:** MLP 256-128-64 with BatchNorm + ReLU + Dropout(0.3), single logit.
